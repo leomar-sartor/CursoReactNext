@@ -1,73 +1,74 @@
-import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react';
 
 class App extends Component{
     
   state = {
-    name: 'Leomar Vaz Sartor',
-    counter: 0
+    counter: 0,
+    posts: [
+      {
+        id: 1,
+        title: 'Title One',
+        body: 'Body One'
+      },
+      {
+        id: 2,
+        title: 'Title Two',
+        body: 'Body Two'
+      },
+      {
+        id: 3,
+        title: 'Title Three',
+        body: 'Body Three'
+      }
+    ]
   };
 
-  handlePClick = () => {
-    const { name } = this.state;
-    console.log(`<p> Clicado ${name}`);
+  timeoutUpdate = null;
 
-    this.setState({name: 'Alterei o estado da NAME'})
+  componentDidMount(){
+    this.handleTimeOut();
   }
 
-  handleAClick = (event) => {
-    event.preventDefault();
-    const { counter } = this.state;
-    this.setState({ counter: counter + 1});
+  componentDidUpdate(){
+    this.handleTimeOut();
+  }
+
+  componentWillUnmount(){
+    clearTimeout(this.timeoutUpdate);
+  }
+
+  handleTimeOut = () => {
+    const { posts, counter } = this.state;
+
+    posts[0].title = 'Change Title.'
+    
+    this.timeoutUpdate = setTimeout(() => {
+      this.setState({ posts, counter: counter + 1 });
+    }, 1000);
+
+    console.log('Olá')
   }
 
   render(){
 
-    const { name, counter } = this.state;
+    const { posts, counter } = this.state;
 
     return (
         <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p onClick={ this.handlePClick }>
-              { name } - { counter }
-            </p>
-            <a onClick={ this.handleAClick }
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Contador
-            </a>
-          </header>
+          <h1>{ counter }</h1>
+          {
+            posts.map( post => (
+              <div key={post.id}>
+               
+                <h1> { post.title}</h1>
+                <p>{post.body}</p>
+              </div>
+            ))
+          }
         </div>
     );
   }
 }
 
 export default App;
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-
