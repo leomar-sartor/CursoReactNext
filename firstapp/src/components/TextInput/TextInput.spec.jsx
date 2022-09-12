@@ -1,45 +1,39 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { TextInput } from ".";
+import { TextInput } from '.';
 
 describe('<TextInput />', () => {
-    it('should have a value os searchvalue', () => {
+  it('should have a value os searchvalue', () => {
+    const fn = jest.fn();
 
-        const fn = jest.fn();
+    render(<TextInput handleChange={fn} searchValue={'testing'} />);
 
-        render(<TextInput handleChange={fn} searchValue={'testing'}/>);
+    const input = screen.getByPlaceholderText(/type your search/i);
+    expect(input.value).toBe('testing');
+  });
 
-        const input = screen.getByPlaceholderText(/type your search/i);
-        expect(input.value).toBe('testing');
-    
-    });
+  it('should call handleChange function on each key pressed', () => {
+    const fn = jest.fn();
 
-    it('should call handleChange function on each key pressed', () => {
+    render(<TextInput handleChange={fn} searchValue="um valor qualquer" />);
 
-        const fn = jest.fn();
+    const input = screen.getByPlaceholderText(/type your search/i);
 
-        render(<TextInput handleChange={fn}/>);
+    const value = 'um valor qualquer';
 
-        const input = screen.getByPlaceholderText(/type your search/i);
+    userEvent.type(input, value);
+    //screen.debug(input);
 
-        const value = 'o valor';
+    expect(input.value).toBe(value);
+    expect(fn).toHaveBeenCalledTimes(value.length);
+  });
 
-        userEvent.type(input, value);
-        //screen.debug(input);
+  it('should match snapshot', () => {
+    const fn = jest.fn();
 
-        expect(input.value).toBe(value);
-        expect(fn).toHaveBeenCalledTimes(value.length);
+    const { container } = render(<TextInput handleChange={fn} searchValue={''} />);
 
-    });
-
-    
-    it('should match snapshot', () => {
-
-        const fn = jest.fn();
-
-        const { container } = render(<TextInput handleChange={fn} />);
-
-        expect(container).toMatchSnapshot();
-    });
+    expect(container).toMatchSnapshot();
+  });
 });
