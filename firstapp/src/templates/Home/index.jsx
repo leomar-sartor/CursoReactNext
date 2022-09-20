@@ -14,7 +14,7 @@ export const Home = () => {
   const [postsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState('');
 
-  const noMorePosts = page + postsPerPage >= allPosts.lengt;
+  const noMorePosts = page + postsPerPage >= allPosts.length;
 
   const filteresPosts = searchValue
     ? allPosts.filter((post) => {
